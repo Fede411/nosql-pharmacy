@@ -1,14 +1,14 @@
 {
-  "name": "P4_ODM_BBDDNR",
+  "name": "P4_ODM_BBDDN",
   "author": "BBDD-ETSIT",
   "license": "GNU",
   "version": "0.0.0",
   "info": {
-      "githubURL": "BBDD-ETSIT/nosql_practica4_bbdd",
-      "serverUrl": "https://autocorector.dit.upm.es/",
-      "courseId": "2110",
-      "assignmentId": "16975"
-  }
+    "githubURL": "BBDD-ETSIT/nosql_practica4_bbdd",
+    "serverUrl": "https://autocorector.dit.upm.es/",
+    "courseId": "2110",
+    "assignmentId": "16975"
+  },
   "scripts": {
     "start": "node rest_server.js",
     "seed": "md-seed run",
