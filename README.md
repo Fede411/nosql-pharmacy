@@ -60,7 +60,7 @@ $ git clone https://github.com/BBDD-ETSIT/nosql_practica4_bbdd
 y entrar en el directorio de trabajo
 
 ```
-$ cd P4_ODM_BBDDNR
+$ cd nosql_practica4_bbdd
 ```
 
 Una vez dentro de la carpeta, se instalan las dependencias con:
