@@ -5,10 +5,10 @@
   "version": "0.0.0",
   "info": {
     "githubURL": "BBDD-ETSIT/nosql_practica4_bbdd",
-    "serverUrl": "https://autocorector.dit.upm.es/",
+    "serverUrl": "https://aat.dit.upm.es/",
     "courseId": "2110",
-    "assignmentId": "16975"
-  },
+    "assignmentId": "7832"
+},
   "scripts": {
     "start": "node rest_server.js",
     "seed": "md-seed run",

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 //tell mongoose to use es6 implementation of promises
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/bio_test');
+mongoose.connect('mongodb://127.0.0.1/bio_test');
 
 
 // Close connection
