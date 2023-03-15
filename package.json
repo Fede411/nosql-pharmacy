@@ -3,6 +3,8 @@
   "author": "BBDD-ETSIT",
   "license": "GNU",
   "version": "0.0.0",
+  "capturesFolder": "miscapturas",
+  "capturesNumber": 1,
   "info": {
     "githubURL": "BBDD-ETSIT/nosql_practica4_bbdd",
     "serverUrl": "https://aat.dit.upm.es/",
@@ -17,7 +19,7 @@
     "test:old": "nodemon --exec 'mocha -R min'"
   },
   "dependencies": {
-    "autocorector": "^1.7.1",
+    "autocorector": "^3.1.4",
     "body-parser": "~1.12.4",
     "ejs": "^3.0.1",
     "express": "~4.13.1",

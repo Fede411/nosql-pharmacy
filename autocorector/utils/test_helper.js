@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 //tell mongoose to use es6 implementation of promises
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://127.0.0.1/bio_test');
 
 
 // Close connection
 before( (done) => {
 	console.log('--------------------------')
 	console.log('--> CONNECTING WITH MONGODB...')
+	mongoose.Promise = global.Promise;
+	mongoose.connect('mongodb://127.0.0.1:27017/bio_test');
 	mongoose.connection
 	    .once('open', function() { 
 	    	console.log('  --> CONNECTED!')
