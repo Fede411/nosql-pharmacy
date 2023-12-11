@@ -163,8 +163,8 @@ beforeEach( async () => {
 		}
 
 	];
+
 	testPatient = {
-		_id: new mongoose.Types.ObjectId('5e3a60fb7be8f029b54a16c9'),
 		name: 'Ana',
 		surname: 'Durcal',
 		dni: '555555',
@@ -186,9 +186,14 @@ describe("BBDD Tests", function () {
             this.msg_err = "The patient has not been created correctly"
             this.msg_ok = "Patient created correctly!"
             const patient = await controller.create(testPatient)
-            const patientD = await Patient.findOne({ _id: '5e3a60fb7be8f029b54a16c9' });
+            const patientD = await Patient.findOne({ name: 'Ana', surname: 'Durcal' });
             should.equal(!testPatient.isNew, true) ;
-            should.equal(patient.toString(), patientD.toString()) ;
+            should.equal( patient.dni, patientD.dni);
+			should.equal( patient.name, patientD.name);
+			should.equal( patient.surname, patientD.surname);
+			should.equal( patient.city, patientD.city);
+			should.equal( patient.profession[0], patientD.profession[0]);
+			should.equal( patient.profession[1], patientD.profession[1]);
 
         });
     });
@@ -227,7 +232,7 @@ describe("BBDD Tests", function () {
 
     describe('Find Patients by City', function()  {
         it('Finding Patients with city= Madrid', async function(){
-            this.score = 1.5;
+            this.score = 1;
             this.msg_err = "The patients with city= Madrid have not been retrieved correctly"
             this.msg_ok = "Patients retrieved correctly!";
             const patients= await controller.filterPatientsByCity('Madrid');
@@ -242,7 +247,7 @@ describe("BBDD Tests", function () {
 
 	describe('Filter Patients by Diagnosis', function() {
 		it('Filtering Patients with Diagnosis= Osteoporosis', async function() {
-            this.score = 1.5;
+            this.score = 1;
             this.msg_err = "The patients with Diagnosis= Osteoporosis have not been retrieved correctly"
             this.msg_ok = "Patients with Diagnosis= Osteoporosis have been retrieved correctly!";
             const patients= await controller.filterPatientsByDiagnosis('Osteoporosis');
@@ -256,7 +261,7 @@ describe("BBDD Tests", function () {
 		})
 	});
 
-	/*describe('Filter Patients by Speacialist And Date', function() {
+	describe('Filter Patients by Speacialist And Date', function() {
 		it('Filtering Patients with Speacialist= Medico de cabecera and dates between 2016-04-14 to 2016-07-15', async function() {
             this.score = 1.5;
             this.msg_err = "The patients Speacialist= Medico de cabecera and dates between 2016-04-14 to 2016-07-15 have not been retrieved correctly"
@@ -266,11 +271,11 @@ describe("BBDD Tests", function () {
             should.equal(patients.length ,1 );
             should.equal(typeof patients[0], 'object');
 		})
-	});*/
+	});
 
 	describe('Add Patient History', function() {
 		it('Adding record to Patient with the id 5e4a60fb7be8f229b54a16cb', async function() {
-            this.score = 2;
+            this.score = 1.5;
             this.msg_err = "The medical record has not been added correctly to the patient with id 5e4a60fb7be8f229b54a16cb"
             this.msg_ok = "The medical record has been added correctly to the patient with id 5e4a60fb7be8f229b54a16cb!";
 			var record = {"specialist" : "Endocrinologo", "diagnosis" : "Diabetes", "date" : new Date(2019,10,5) };
