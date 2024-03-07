@@ -205,8 +205,8 @@ Abrá un navegador y navegar a "http://localhost:8001". Inserte, por medio de la
 
 Verificar haciendeo uso de la mongoshell que el paciente se  ha creado en la colección correspondiente . En este punto, ejecute el dentro de la mongo shell el comando necesario para buscar al paciente creado anterioemente. Haga una captura en la que se observe la salida de dicho comando y guardela en miscapturas.
 
-### 5.1 Búsqueda con filtros avanzados (Opcional)
-- Se sugiere implementar esta función para que el estudiante practique el manejo de filtros, para realizar consultas dentro de un rango de fechas. Sin embargo, esta función no será evaluada dentro de la práctica ni considerada dentro de los tests del autocorector.
+### 5.1 Búsqueda con filtros avanzados 
+- Implementar esta función para que el estudiante practique el manejo de filtros, para realizar consultas dentro de un rango de fechas. 
 
 ### filterPatientsBySpeacialistAndDate(specialist, sDate,fDate)
 
