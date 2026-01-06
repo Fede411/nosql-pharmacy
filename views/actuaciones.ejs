@@ -1,0 +1,211 @@
+<%
+  const actuacion = locals.actuacion || '';
+  const start = locals.start || '';
+  const end = locals.end || '';
+  const paciente_id = locals.paciente_id || '';
+%>
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <script src="https://unpkg.com/@popperjs/core@^2.0.0"></script>
+  <script src="/javascripts/jquery-3.2.1.min.js"></script>
+  <script src="/javascripts/bootstrap.js"></script>
+  <script src="/javascripts/bootstrap-datepicker.js"></script>
+
+  <link rel="stylesheet" href="/stylesheets/bootstrap.css" />
+  <link rel="stylesheet" href="/stylesheets/bootstrap-datepicker.css" />
+  <link rel="stylesheet" href="/stylesheets/style.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class="container-fluid">
+    <!-- Navbar -->
+    <div class="row">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary w-100">
+        <div id="brand" class="col-xl-2 col-lg-3 col-md-3">
+          <a class="navbar-brand" href="/home"><b>PHARMACY</b></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+            aria-controls="#navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div id="items" class="col-xl-10 col-lg-9 col-md-9">
+          <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/consumos_acumulados"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-pills"></i> <b>ACCUMULATED CONSUMPTION</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dispensacion"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i> <b>DISPENSATION PROGRAMS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/actuaciones"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i> <b>ACTIONS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/estadisticas"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-chart-bar"></i> <b>STATISTICS</b></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="row content mt-5 pt-3">
+      <!-- Sidebar filters -->
+      <div class="col-xl-2 col-lg-3 col-md-3 col-12 patient-filter">
+        <h2><b>FILTERS</b></h2>
+        <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="filterTipo-tab" data-toggle="tab" href="#filterTipo" role="tab"><i class="fas fa-city mr-2"></i><b>BY ACTION TYPE</b></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="countTipo-tab" data-toggle="tab" href="#countTipo" role="tab"><i class="fas fa-city mr-2"></i><b>NUMBER OF ACTIONS BY TYPE</b></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" id="filterPaciente-tab" data-toggle="tab" href="#filterPaciente" role="tab"><i class="fas fa-city mr-2"></i><b>ACTIONS BY PATIENT</b></a>
+          </li>
+        </ul>
+
+        <hr>
+
+        <div class="tab-content" id="myTabContent">
+          <!-- Filter by Tipo -->
+          <div class="tab-pane fade show active" id="filterTipo" role="tabpanel">
+            <form name="formMedicamento" method="GET" action="/actuaciones">
+              <label>Enter action type:</label>
+              <input list="optionsTipo" id="actuacionTipo" name="actuacion" autocomplete="off" value="<%= actuacion || '' %>">
+              <datalist id="optionsTipo">
+                <option value="Print PRESCRIPTION">
+                <option value="Patient info: MANDATORY TSI">
+                <option value="PRM: Adverse effects">
+                <option value="Follow-up: MEDICATION ADJUSTMENT">
+                <option value="OTHER ACTIONS">
+              </datalist>
+              <p></p>
+              <div class="input-daterange input-group">
+                <label>Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" value="<%= start || '' %>"/>
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" value="<%= end || '' %>"/>
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button">Search</button>
+            </form>
+          </div>
+
+          <!-- Count actuaciones -->
+          <div class="tab-pane fade" id="countTipo" role="tabpanel">
+            <form method="GET" action="/actuaciones/countactuaciones">
+              <label>Select the action type:</label>
+              <input list="optionsCount" id="actuacionCount" name="actuacion" autocomplete="off" value="<%= actuacion || '' %>">
+              <datalist id="optionsCount">
+                <option value="Print PRESCRIPTION">
+                <option value="Patient info: MANDATORY TSI">
+                <option value="PRM: Adverse effects">
+                <option value="Follow-up: MEDICATION ADJUSTMENT">
+                <option value="OTHER ACTIONS">
+              </datalist>
+              <p></p>
+              <div class="input-daterange input-group">
+                <label>Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" value="<%= start || '' %>"/>
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" value="<%= end || '' %>"/>
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button">Count</button>
+            </form>
+          </div> 
+
+          <!-- Filter by Paciente -->
+          <div class="tab-pane fade" id="filterPaciente" role="tabpanel">
+            <form name="formHistorialActuaciones" method="GET" action="/actuaciones">
+              <label>Número de historial del paciente:</label>
+              <input type="text" name="paciente_id" value="<%= paciente_id || '' %>" required>
+              <p></p>
+              <div class="input-daterange input-group">
+                <label>Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" value="<%= start || '' %>"/>
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" value="<%= end || '' %>"/>
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button">Buscar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main table -->
+      <div class="col-xl-9 col-lg-8 col-md-9 col-sm-12">
+        <div class="row content-info">
+          <div class="page-header">
+            <h1 id="tables">ACTIONS</h1>
+            <form action="/actuaciones/export" method="get" style="margin-bottom: 10px;">
+              <input type="hidden" name="actuacion" value="<%= actuacion || '' %>"/>
+              <input type="hidden" name="paciente_id" value="<%= paciente_id || '' %>"/>
+              <input type="hidden" name="start" value="<%= start || '' %>"/>
+              <input type="hidden" name="end" value="<%= end || '' %>"/>
+              <button type="submit" class="btn btn-success">Export CSV</button>
+            </form>
+          </div>
+          <table class="table table-hover">
+            <thead class="bg-secondary">
+              <tr>
+                <th scope="col">paciente_id</th>
+                <th scope="col">actuacion</th>
+                <th scope="col">farmaceutico</th>
+                <th scope="col">fecha</th>
+                <th scope="col">hora</th>
+                <th scope="col">lin_observaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (actuaciones && actuaciones.length > 0) { %>
+                <% actuaciones.forEach(function(item) { %>
+                  <tr>
+                    <td><%= item.paciente_id %></td>
+                    <td><%= item.actuacion %></td>
+                    <td><%= item.farmaceutico %></td>
+                    <td>
+  <%= item.fecha ? item.fecha.toISOString().substring(0, 10) : '' %>
+</td>
+
+                    <td><%= item.hora %></td>
+                    <td><%= item.lin_observaciones %></td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6">No data available</td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".pacient-alert").fadeOut({ duration: 3000 });
+      $('div.input-daterange').datepicker({ format: 'yyyy-mm-dd' });
+
+      // Persist the active tab after reload
+      var hash = window.location.hash;
+      if(hash) {
+        $('#myTab a[href="' + hash + '"]').tab('show');
+      }
+    });
+  </script>
+</body>
+</html>

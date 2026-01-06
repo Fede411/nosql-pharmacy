@@ -1,0 +1,415 @@
+<%
+  const paciente_id = locals.paciente_id || '';
+  const start = locals.start || '';
+  const end = locals.end || '';
+  const medicamento1 = locals.medicamento1 || '';
+  const medicamento2 = locals.medicamento2 || '';
+  const medicamento3 = locals.medicamento3 || '';
+  const principio_activo1 = locals.principio_activo1 || '';
+  const principio_activo2 = locals.principio_activo2 || '';
+  const principio_activo3 = locals.principio_activo3 || '';
+%>
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <script src="https://unpkg.com/@popperjs/core@^2.0.0"></script>
+  <script src="/javascripts/jquery-3.2.1.min.js"></script>
+  <script src="/javascripts/bootstrap.js"></script>
+  <script src="/javascripts/bootstrap-datepicker.js"></script>
+  <script defer src="opcionesMedicamentos.js"></script>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+  <link rel='stylesheet' href='/stylesheets/bootstrap-datepicker.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+        <div id="brand" class="col-xl-2 col-lg-3 col-md-3">
+          <a class="navbar-brand" href="/home"><b>PHARMACY</b></a>
+          <button style="float: right;" class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+            data-target="#navbarColor01" aria-controls="#navbarColor01" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div id="items" class="col-xl-10 col-lg-9 col-md-9">
+          <div class="navbar-collapse collapse" id="navbarColor01" style="">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link active" href="/consumos_acumulados"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-pills"></i> <b>ACCUMULATED CONSUMPTION</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dispensacion"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-user-injured"></i> <b>DISPENSATION PROGRAMS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/actuaciones"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-user-injured"></i> <b>ACTIONS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/estadisticas"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-chart-bar"></i> <b>STATISTICS</b></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="row content">
+      <div class="col-xl-2 col-lg-3 col-md-3 col-12 patient-filter">
+        <div>
+          <h2><b>FILTERS</b></h2>
+          <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link" id="filterConsumoByUnionRegistrado-tab" data-toggle="tab"
+                href="#filterConsumoByUnionRegistrado" role="tab" aria-controls="filterConsumoByUnionRegistrado"
+                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>BY DRUG/S</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterConsumoByUnionPrincipioActivoDescripcion-tab" data-toggle="tab"
+                href="#filterConsumoByUnionPrincipioActivoDescripcion" role="tab"
+                aria-controls="filterConsumoByUnionPrincipioActivoDescripcion" aria-selected="true"><i
+                  style="margin-right: 11px;" class="fas fa-city"></i> <b>BY ACTIVE INGREDIENT/S</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterDosisByNombreMedicamento-tab" data-toggle="tab"
+                href="#filterDosisByNombreMedicamento" role="tab" aria-controls="filterDosisByNombreMedicamento"
+                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>UNITS BY DRUG</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterDosisByNombreMedicamentoAndIdPaciente-tab" data-toggle="tab"
+                href="#filterDosisByNombreMedicamentoAndIdPaciente" role="tab"
+                aria-controls="filterDosisByNombreMedicamentoAndIdPaciente" aria-selected="true"><i
+                  style="margin-right: 11px;" class="fas fa-city"></i> <b>UNITS PER PATIENT PER DRUG</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterConsumosByNumHistorialFecha-tab" data-toggle="tab"
+                href="#filterConsumosByNumHistorialFecha" role="tab" aria-controls="filterConsumosByNumHistorialFecha"
+                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>BY PATIENT</b></a>
+            </li>
+          </ul>
+        </div>
+        <hr>
+        <div class="tab-content" id="myTabContent">
+
+          <div class="tab-pane fade" id="filterConsumoByUnionRegistrado" role="tabpanel" aria-labelledby="home-tab">
+
+            <form name="formMedicamentoConsumo" method="GET"
+              action="/consumos_acumulados/filterConsumoByUnionRegistrado">
+              <label for="largeSelect">Enter the name of the first drug:</label>
+              <input list="optionsMedicamentos" id="medicamento1" name="medicamento1" autocomplete="off">
+
+              <label for="name">Enter the name of the second drug:</label>
+              <input list="optionsMedicamentos" id="medicamento2" name="medicamento2" autocomplete="off">
+
+              <label for="name">Enter the name of the third drug:</label>
+              <input list="optionsMedicamentos" id="medicamento3" name="medicamento3" autocomplete="off">
+              <datalist id="optionsMedicamentos"></datalist>
+              <script src="scriptMedicamentos.js"></script>
+              <script src="/javascripts/autocompleteMedicamentos.js"></script>
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterConsumoByUnionRegistrado()">Search</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="filterConsumoByUnionPrincipioActivoDescripcion" role="tabpanel"
+            aria-labelledby="home-tab">
+            <form name="formPrincipioActivoConsumo" method="GET"
+              action="/consumos_acumulados/filterConsumoByUnionPrincipioActivoDescripcion">
+              <label for="name">Enter the name of the first active ingredient:</label>
+              <input list="optionsPrincipiosActivos" id="principio_activo1" name="principio_activo1" autocomplete="off">
+              <label for="name">Enter the name of the second active ingredient:</label>
+              <input list="optionsPrincipiosActivos" id="principio_activo2" name="principio_activo2" autocomplete="off">
+              <label for="name">Enter the name of the third active ingredient:</label>
+              <input list="optionsPrincipiosActivos" id="principio_activo3" name="principio_activo3" autocomplete="off">
+              <datalist id="optionsPrincipiosActivos"></datalist>
+              <script src="scriptPrincipioActivo.js"></script>
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterConsumoByUnionPrincipioActivoDescripcion()">Search</button>
+            </form>
+          </div>
+
+
+          <div class="tab-pane fade" id="filterDosisByNombreMedicamento" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formDosisNombreMedicamento" method="GET"
+              action="/consumos_acumulados/filterDosisByNombreMedicamento">
+              <label for="name">Enter the drug name:</label>
+              <input list="optionsMedicamentos" id="medicamento" name="medicamento" autocomplete="off">
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterDosisByNombreMedicamento()">Search</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="filterDosisByNombreMedicamentoAndIdPaciente" role="tabpanel"
+            aria-labelledby="home-tab">
+            <form name="formDosisNombreMedicamentoAndIdPaciente" method="GET"
+              action="/consumos_acumulados/filterDosisByNombreMedicamentoAndIdPaciente">
+              <label for="name">Enter the drug name:</label>
+              <input list="optionsMedicamentos" id="medicamento" name="medicamento" autocomplete="off">
+              <p></p>
+              <label for="name">Enter patient record number:</label>
+              <input type="text" name="paciente_id" id="paciente_id"></input>
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterDosisByNombreMedicamentoAndIdPaciente()">Search</button> 
+            </form>
+          </div>
+          <div class="tab-pane fade" id="filterConsumosByNumHistorialFecha" role="tabpanel" aria-labelledby="home-tab">
+            <form name="filterConsumosByNumHistorialFecha" method="GET"
+              action="/consumos_acumulados/filterConsumosByNumHistorialFecha">
+              <label for="name">Enter patient record number: </label>
+              <input type="text" name="paciente_id" id="paciente_id" required></input>
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">to</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterConsumosByNumHistorialFecha()">Search</button>
+            </form>
+          </div>
+
+
+
+
+        </div>
+      </div>
+      <div class="col-xl-9 col-lg-8 col-md-9 col-sm-12">
+        <div class="row content-info">
+<div class="page-header">
+  <h1 id="tables">ACCUMULATED CONSUMPTION</h1>
+
+  <form action="/consumos_acumulados/export" method="GET" style="margin-bottom: 10px;">
+    <input type="hidden" name="paciente_id" value="<%= paciente_id || '' %>"/>
+    <input type="hidden" name="start" value="<%= start || '' %>"/>
+    <input type="hidden" name="end" value="<%= end || '' %>"/>
+    <input type="hidden" name="medicamento1" value="<%= medicamento1 || '' %>"/>
+    <input type="hidden" name="medicamento2" value="<%= medicamento2 || '' %>"/>
+    <input type="hidden" name="medicamento3" value="<%= medicamento3 || '' %>"/>
+    <input type="hidden" name="principio_activo1" value="<%= principio_activo1 || '' %>"/>
+    <input type="hidden" name="principio_activo2" value="<%= principio_activo2 || '' %>"/>
+    <input type="hidden" name="principio_activo3" value="<%= principio_activo3 || '' %>"/>
+    <button type="submit" class="btn btn-success">Export CSV</button>
+  </form>
+</div>
+
+          <table class="table table-hover">
+            <thead class="bg-secondary">
+              <tr>
+
+
+                <th scope="col">almacen_id</th>
+                <th scope="col">fecha</th>
+                <th scope="col">gfh_id</th>
+                <th scope="col">gfh_descripcion</th>
+                <th scope="col">codigo_nacional</th>
+                <th scope="col">nombre_medicamento</th>
+                <th scope="col">unidades_totales</th>
+                <th scope="col">principio_activo_id</th>
+                <th scope="col">principio_activo_descripcion</th>
+                <th scope="col">grupo_terapeutico_id</th>
+                <th scope="col">grupo_terapeutico_descripcion</th>
+                <th scope="col">tipo_especialidad1_id</th>
+                <th scope="col">tipo_especialidad1_descripcion</th>
+                <th scope="col">tipo_especialidad2_id</th>
+                <th scope="col">tipo_especialidad2_descripcion</th>
+                <th scope="col">tipo_especialidad3_id</th>
+                <th scope="col">tipo_especialidad3_descripcion</th>
+                <th scope="col">laboratorio_id</th>
+                <th scope="col">laboratorio_descripcion</th>
+                <th scope="col">paciente_id</th>
+                <th scope="col">paciente_nombre_completo</th>
+                <th scope="col">tipo_paciente_pe_id</th>
+                <th scope="col">tipo_paciente_pe_descripcion</th>
+                <th scope="col">epigrafe_contable_id</th>
+                <th scope="col">epigrafe_contable_descripcion</th>
+                <th scope="col">medico_id</th>
+                <th scope="col">medico_nombre_completo</th>
+                <th scope="col">terapia_id</th>
+                <th scope="col">terapia_descripcion</th>
+                <th scope="col">dispensador_id</th>
+                <th scope="col">tipo_dispensador_id</th>
+                <th scope="col">cab_e_s_id</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <% if (consumos_acumulados && consumos_acumulados.length> 0) { %>
+
+                <% consumos_acumulados.forEach(function(item) { %>
+                  <tr class="click-row" href="/consumos_acumulados/<%= item._id %>">
+
+                    <td>
+                      <%= item.almacen_id %>
+                    </td>
+                    <td>
+                      <%= item.fecha ? item.fecha.toString().substring(0, 10) : '' %>
+                    </td>
+                    <td>
+                      <%= item.gfh_id %>
+                    </td>
+                    <td>
+                      <%= item.gfh_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.codigo_nacional %>
+                    </td>
+                    <td>
+                      <%= item.nombre_medicamento %>
+                    </td>
+                    <td>
+                      <%= item.unidades_totales %>
+                    </td>
+                    <td>
+                      <%= item.principio_activo_id %>
+                    </td>
+                    <td>
+                      <%= item.principio_activo_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.grupo_terapeutico_id %>
+                    </td>
+                    <td>
+                      <%= item.grupo_terapeutico_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad1_id %>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad1_descripcio%>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad2_id %>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad2_descripcio %>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad3_id %>
+                    </td>
+                    <td>
+                      <%= item.tipo_especialidad3_descripcio %>
+                    </td>
+                    <td>
+                      <%= item.laboratorio_id %>
+                    </td>
+                    <td>
+                      <%= item.laboratorio_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.paciente_id %>
+                    </td>
+                    <td>
+                      <%= item.nombre_completo %>
+                    </td>
+                    <td>
+                      <%= item.tipo_paciente_pe_id %>
+                    </td>
+                    <td>
+                      <%= item.tipo_paciente_pe_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.epigrafe_contable_id %>
+                    </td>
+                    <td>
+                      <%= item.epigrafe_contable_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.medico_id %>
+                    </td>
+                    <td>
+                      <%= item.medico_nombre_completo %>
+                    </td>
+                    <td>
+                      <%= item.terapia_id %>
+                    </td>
+                    <td>
+                      <%= item.terapia_descripcion %>
+                    </td>
+                    <td>
+                      <%= item.dispensador_id %>
+                    </td>
+                    <td>
+                      <%= item.tipo_dispensador_id %>
+                    </td>
+                    <td>
+                      <%= item.cab_e_s_id %>
+                    </td>
+
+                  </tr>
+                  <% }); %>
+                    <% } else { %>
+                      <tr>
+                        <td colspan="20">No data available</td>
+                      </tr>
+                      <% } %>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+<script type="text/javascript">
+  $(document).ready(function () {
+
+
+    $(".pacient-alert").fadeOut({ duration: 3000 });
+
+    $('div.input-daterange').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+  });
+
+</script>
+
+</html>

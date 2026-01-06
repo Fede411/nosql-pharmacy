@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+    <script src="https://unpkg.com/@popperjs/core@^2.0.0"></script>
+    <script src="/javascripts/jquery-3.2.1.min.js"></script>
+    <script src="/javascripts/bootstrap.js"></script>
+    <script src="/javascripts/bootstrap-datepicker.js"></script>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap-datepicker.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+                <div id="brand" class="col-xl-2 col-lg-3 col-md-3">
+                    <a class="navbar-brand" href="/home"><b>PHARMACY</b></a>
+                    <button style="float: right;" class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+                        data-target="#navbarColor01" aria-controls="#navbarColor01" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+                <div id="items" class="col-xl-10 col-lg-9 col-md-9">
+                    <div class="navbar-collapse collapse" id="navbarColor01" style="">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/consumos_acumulados"><i
+                                        style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i>
+                                    <b>ACCUMULATED CONSUMPTION</b></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/actuaciones"><i
+                                        style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i>
+                                    <b>ACTIONS</b></a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="row content">
+            <div class="col-xl-2 col-lg-3 col-md-3 col-12 patient-filter">
+                <div>
+                    <h2><b>FILTERS</b></h2>
+                    <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="filterPatientsByUnionRegistrado-tab" data-toggle="tab"
+                                href="#filterPatientsByUnionRegistrado" role="tab"
+                                aria-controls="filterPatientsByUnionRegistrado" aria-selected="true"><i
+                                    style="margin-right: 11px;" class="fas fa-city"></i> <b>BY DRUG</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="filterPatientsByNumHistorialFecha-tab" data-toggle="tab"
+                                href="#filterPatientsByNumHistorialFecha" role="tab"
+                                aria-controls="filterPatientsByNumHistorialFecha" aria-selected="true"><i
+                                    style="margin-right: 11px;" class="fas fa-city"></i> <b>PATIENT HISTORY FOR A PERIOD</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="filterPatientsByUnionPrincipioActivoDescripcion-tab"
+                                data-toggle="tab" href="#filterPatientsByUnionPrincipioActivoDescripcion" role="tab"
+                                aria-controls="filterPatientsByUnionPrincipioActivoDescripcion" aria-selected="true"><i
+                                    style="margin-right: 11px;" class="fas fa-city"></i> <b>PATIENTS BY ACTIVE INGREDIENT</b></a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="filterPacienteByDate-tab" data-toggle="tab"
+                                href="#filterPacienteByDate" role="tab" aria-controls="filterPacienteByDate"
+                                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>PATIENT BY DATE</b>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" id="countPacienteByDate-tab" data-toggle="tab"
+                                href="#countPacienteByDate" role="tab" aria-controls="countPacienteByDate"
+                                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>NUMBER OF PATIENTS BY PERIOD</b></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pacienteNuevo-tab" data-toggle="tab" href="#pacienteNuevo"
+                                role="tab" aria-controls="pacienteNuevo" aria-selected="true"><i
+                                    style="margin-right: 11px;" class="fas fa-city"></i> <b>NEW PATIENTS BY PERIOD</b></a>
+                        </li>
+                    </ul>
+
+                </div>
+                <hr>
+                <div class="tab-content" id="myTabContent">
+
+                    <div class="tab-pane fade" id="filterPatientsByUnionRegistrado" role="tabpanel"
+                        aria-labelledby="home-tab">
+                        <form name="formMedicamento" method="POST"
+                            action="/dispensacion/filterPatientsByUnionRegistrado">
+                            <label for="name">Enter the first drug name:</label>
+                            <input type="text" name="medicamento1" id="medicamento1" required></input>
+                            <label for="name">Enter the second drug name:</label>
+                            <input type="text" name="medicamento2" id="medicamento2"></input>
+                            <label for="name">Enter the third drug name:</label>
+                            <input type="text" name="medicamento3" id="medicamento3"></input>
+                            <p></p>
+                            <div class="input-daterange input-group" id="datepicker">
+                                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                <input type="text" class="input-sm form-control" name="start" required />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" name="end" required />
+                            </div>
+
+                            </fieldset>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="filterPatientsByUnionRegistrado()">Search</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="filterPatientsByNumHistorialFecha" role="tabpanel"
+                        aria-labelledby="home-tab">
+                        <form name="formHistorial" method="POST"
+                            action="/dispensacion/filterPatientsByNumHistorialFecha">
+                            <label for="name">Enter patient history number:</label>
+                            <input type="text" name="paciente_id" id="paciente_id" required></input>
+                            <p></p>
+                            <div class="input-daterange input-group" id="datepicker">
+                                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                <input type="text" class="input-sm form-control" name="start" />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" name="end" />
+                            </div>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="filterPatientsByNumHistorialFecha()">Search</button>
+                        </form>
+                    </div>
+
+
+                    <div class="tab-pane fade" id="filterPatientsByUnionPrincipioActivoDescripcion" role="tabpanel"
+                        aria-labelledby="home-tab">
+                        <form name="formUnionPrincipioActivo" method="POST"
+                            action="/dispensacion/filterPatientsByUnionPrincipioActivoDescripcion">
+                            <label for="name">Enter the first active ingredient name:</label>
+                            <input type="text" name="principio_activo1" id="principio_activo1" required></input>
+                            <label for="name">Enter the second active ingredient name:</label>
+                            <input type="text" name="principio_activo2" id="principio_activo2"></input>
+                            <label for="name">Enter the third active ingredient name:</label>
+                            <input type="text" name="principio_activo3" id="principio_activo3"></input>
+                            <p></p>
+                            <div class="input-daterange input-group" id="datepicker">
+                                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                <input type="text" class="input-sm form-control" name="start" required />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" name="end" required />
+                            </div>
+
+                            </fieldset>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="filterPatientsByNombreMedicamento()">Search</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="filterPacienteByDate" role="tabpanel" aria-labelledby="home-tab">
+                        <form name="formHistorial" method="POST" action="/dispensacion/filterPacienteByDate">
+
+                            <div class="input-daterange input-group" id="datepicker">
+                                <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                <input type="text" class="input-sm form-control" name="start" />
+                                <span class="input-group-addon">to</span>
+                                <input type="text" class="input-sm form-control" name="end" />
+                            </div>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="filterPacienteByDate()">Search</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="countPacienteByDate" role="tabpanel" aria-labelledby="home-tab">
+                        <form name="formHistorial" method="POST" action="/dispensacion/countPacienteByDate">
+                            <fieldset>
+                                <div class="form-group">
+
+                                    <div class="input-daterange input-group" id="datepicker">
+                                        <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                        <input type="text" class="input-sm form-control" name="start" />
+                                        <span class="input-group-addon">to</span>
+                                        <input type="text" class="input-sm form-control" name="end" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="countPacienteByDate()">Count</button>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="pacienteNuevo" role="tabpanel" aria-labelledby="home-tab">
+                        <form name="formMedicamento" method="POST" action="/dispensacion/pacienteNuevo">
+                            <fieldset>
+                                <div class="form-group">
+
+                                    <div class="input-daterange input-group" id="datepicker">
+                                        <label for="name">Enter date range (YYYY-MM-DD):</label>
+                                        <input type="text" class="input-sm form-control" name="start" />
+                                        <span class="input-group-addon">to</span>
+                                        <input type="text" class="input-sm form-control" name="end" />
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary filter-button"
+                                onclick="pacienteNuevo()">Count</button>
+                        </form>
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-12">
+
+                <div class="row content-info">
+                    <div class="page-header">
+                        <tr>
+                            <td>
+                                <h1 id="tables">Patients</h1>
+                            </td>
+                            <td><a href="/dispensacion/infoCompleta"><input type="button"
+                                        value="FULL INFORMATION"></a></td>
+                            <td><a href="/dispensacion/cuentaTotal"><input type="button"
+                                        value="NUMBER OF PATIENTS TAKING MEDICATION"></a></td>
+
+
+
+                        </tr>
+
+
+                    </div>
+                    <table class="table table-hover">
+                        <thead class="bg-secondary">
+                            <tr>
+
+
+                                <th scope="col">patient_id</th>
+                                <th scope="col">patient_full_name</th>
+                                <th scope="col">dose</th>
+                                <th scope="col">start_date</th>
+                                <th scope="col">drug_name</th>
+                                <th scope="col">doctor_full_name</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (dispensacion && dispensacion.length> 0) { %>
+                                <% dispensacion.forEach(function(item) { %>
+                                    <tr class="click-row" href="/dispensacion/<%= item._id %>">
+                                        <td>
+                                            <%= item.paciente_id %>
+                                        </td>
+                                        <td>
+                                            <%= item.paciente_nombre_completo %>
+                                        </td>
+                                        <td>
+                                            <%= item.dosis %>
+                                        </td>
+                                        <td>
+                                            <%= item.fecha_inicio.toISOString().substring(0, 10); %>
+                                        </td>
+                                        <td>
+                                            <%= item.nombre_medicamento %>
+                                        </td>
+                                        <td>
+                                            <%= item.medico_nombre_completo %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="20">No data available</td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $(".pacient-alert").fadeOut({ duration: 3000 });
+
+        $('div.input-daterange').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+    });
+</script>
+
+</html>

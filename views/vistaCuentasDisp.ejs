@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <script src="/javascripts/autocomplete-optimizado.js"></script>
+  <script src="https://unpkg.com/@popperjs/core@^2.0.0"></script>
+  <script src="/javascripts/jquery-3.2.1.min.js"></script>
+  <script src="/javascripts/bootstrap.js"></script>
+  <script src="/javascripts/bootstrap-datepicker.js"></script>
+  <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+  <link rel='stylesheet' href='/stylesheets/bootstrap-datepicker.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <div class="container-fluid">
+
+    <div class="row">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+        <div id="brand" class="col-xl-2 col-lg-3 col-md-3">
+          <a class="navbar-brand" href="/home"><b>PHARMACY</b></a>
+          <button style="float: right;" class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+            data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div id="items" class="col-xl-10 col-lg-9 col-md-9">
+          <div class="navbar-collapse collapse" id="navbarColor01" style="">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/consumos_acumulados"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-user-injured"></i> <b>ACCUMULATED CONSUMPTION</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/actuaciones"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-user-injured"></i> <b>ACTIONS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/estadisticas"><i style="margin-right: 15.5px; margin-left: 5px;"
+                    class="fas fa-chart-line"></i> <b>STATISTICS</b></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="row content">
+      <div class="col-xl-2 col-lg-3 col-md-3 col-12 patient-filter">
+        <div>
+          <h2><b>FILTERS</b></h2>
+          <ul class="nav nav-pills flex-column" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link" id="filterPatientsByUnionRegistrado-tab" data-toggle="tab"
+                href="#filterPatientsByUnionRegistrado" role="tab" aria-controls="filterPatientsByUnionRegistrado"
+                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>BY DRUG/S
+                </b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterPatientsByNumHistorialFecha-tab" data-toggle="tab"
+                href="#filterPatientsByNumHistorialFecha" role="tab" aria-controls="filterPatientsByNumHistorialFecha"
+                aria-selected="true"><i style="margin-right: 11px;" class="fas fa-city"></i> <b>BY PATIENT</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="filterPatientsByUnionPrincipioActivoDescripcion-tab" data-toggle="tab"
+                href="#filterPatientsByUnionPrincipioActivoDescripcion" role="tab"
+                aria-controls="filterPatientsByUnionPrincipioActivoDescripcion" aria-selected="true"><i
+                  style="margin-right: 11px;" class="fas fa-city"></i> <b>BY ACTIVE INGREDIENT</b></a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" id="filterPacienteByDate-tab" data-toggle="tab" href="#filterPacienteByDate"
+                role="tab" aria-controls="filterPacienteByDate" aria-selected="true"><i style="margin-right: 11px;"
+                  class="fas fa-city"></i> <b>PATIENTS IN A TIME PERIOD
+                </b>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" id="countPacienteByDate-tab" data-toggle="tab" href="#countPacienteByDate" role="tab"
+                aria-controls="countPacienteByDate" aria-selected="true"><i style="margin-right: 11px;"
+                  class="fas fa-city"></i> <b>TOTAL PATIENTS</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="pacienteNuevo-tab" data-toggle="tab" href="#pacienteNuevo" role="tab"
+                aria-controls="pacienteNuevo" aria-selected="true"><i style="margin-right: 11px;"
+                  class="fas fa-city"></i> <b>NEW PATIENTS</b></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="pacienteNuevo-tab" data-toggle="tab" href="#pacienteNuevo" role="tab"
+                aria-controls="pacienteNuevo" aria-selected="true"><i style="margin-right: 11px;"
+                  class="fas fa-city"></i> <b>NEW TOTAL PATIENTS</b></a>
+            </li>
+          </ul>
+
+        </div>
+        <hr>
+        <div class="tab-content" id="myTabContent">
+
+          <div class="tab-pane fade" id="filterPatientsByUnionRegistrado" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formMedicamento" method="POST" action="/dispensacion/filterPatientsByUnionRegistrado">
+              <label for="name">Introduce the first drug:</label>
+              <input type="text" id="medicamento1" name="medicamento1" class="form-control" placeholder="..."
+                autocomplete="off">
+              <label for="name">Introduce the second drug:</label>
+              <input type="text" id="medicamento2" name="medicamento2" class="form-control" placeholder="..."
+                autocomplete="off">
+              <label for="name">Introduce the third drug:</label>
+              <input type="text" id="medicamento3" name="medicamento3" class="form-control" placeholder="..."
+                autocomplete="off">
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter the date range (AAAA-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" required />
+                <span class="input-group-addon">a</span>
+                <input type="text" class="input-sm form-control" name="end" required />
+              </div>
+
+              <p></p>
+              <label><b>Filter by GFH:</b></label>
+              <div class="gfh-filter-container">
+                <div class="gfh-select-all">
+                  <label class="gfh-checkbox">
+                    <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                  </label>
+                </div>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+              </div>
+
+
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterPatientsByUnionRegistrado()">Search</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="filterPatientsByNumHistorialFecha" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formHistorial" method="POST" action="/dispensacion/filterPatientsByNumHistorialFecha">
+              <label for="name">Enter the patient's medical record number: </label>
+              <input type="text" name="paciente_id" id="paciente_id" required></input>
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter the date range(AAAA-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">a</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterPatientsByNumHistorialFecha()">Search</button>
+            </form>
+          </div>
+
+
+          <div class="tab-pane fade" id="filterPatientsByUnionPrincipioActivoDescripcion" role="tabpanel"
+            aria-labelledby="home-tab">
+            <form name="formUnionPrincipioActivo" method="POST"
+              action="/dispensacion/filterPatientsByUnionPrincipioActivoDescripcion">
+              <label for="name">Enter the name of the first active principle:</label>
+              <input type="text" id="principio_activo1" name="principio_activo1" class="form-control" placeholder="..."
+                autocomplete="off">
+              <label for="name">Enter the name of the second active principle:</label>
+              <input type="text" id="principio_activo2" name="principio_activo2" class="form-control" placeholder="..."
+                autocomplete="off">
+              <label for="name">Enter the name of the third active principle:</label>
+              <input type="text" id="principio_activo3" name="principio_activo3" class="form-control" placeholder="..."
+                autocomplete="off">
+              <p></p>
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter the date range (AAAA-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" required />
+                <span class="input-group-addon">a</span>
+                <input type="text" class="input-sm form-control" name="end" required />
+              </div>
+
+              <p></p>
+              <label><b>Filter by GFH:</b></label>
+              <div class="gfh-filter-container">
+                <div class="gfh-select-all">
+                  <label class="gfh-checkbox">
+                    <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                  </label>
+                </div>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+              </div>
+
+              <p></p>
+              </fieldset>
+
+              <p></p>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterPatientsByNombreMedicamento()">Search</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="filterPacienteByDate" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formHistorial" method="POST" action="/dispensacion/filterPacienteByDate">
+
+              <div class="input-daterange input-group" id="datepicker">
+                <label for="name">Enter the date range (AAAA-MM-DD):</label>
+                <input type="text" class="input-sm form-control" name="start" />
+                <span class="input-group-addon">a</span>
+                <input type="text" class="input-sm form-control" name="end" />
+              </div>
+              <p></p>
+              <p></p>
+              <label><b>Filter by GFH:</b></label>
+              <div class="gfh-filter-container">
+                <div class="gfh-select-all">
+                  <label class="gfh-checkbox">
+                    <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                  </label>
+                </div>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+              </div>
+
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="filterPacienteByDate()">Search</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="countPacienteByDate" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formHistorial" method="POST" action="/dispensacion/countPacienteByDate">
+              <fieldset>
+                <div class="form-group">
+
+                  <div class="input-daterange input-group" id="datepicker">
+                    <label for="name">Enter the date range(AAAA-MM-DD):</label>
+                    <input type="text" class="input-sm form-control" name="start" />
+                    <span class="input-group-addon">a</span>
+                    <input type="text" class="input-sm form-control" name="end" />
+                  </div>
+                </div>
+
+                <p></p>
+                <label><b>Filter by GFH:</b></label>
+                <div class="gfh-filter-container">
+                  <div class="gfh-select-all">
+                    <label class="gfh-checkbox">
+                      <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                    </label>
+                  </div>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+                </div>
+
+                <p></p>
+              </fieldset>
+              <button type="submit" class="btn btn-primary filter-button" onclick="countPacienteByDate()">Count</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="pacienteNuevo" role="tabpanel" aria-labelledby="home-tab">
+            <form name="formMedicamento" method="POST" action="/dispensacion/pacienteNuevo">
+              <fieldset>
+                <div class="form-group">
+
+                  <div class="input-daterange input-group" id="datepicker">
+                    <label for="name">Enter the date range (AAAA-MM-DD):</label>
+                    <input type="text" class="input-sm form-control" name="start" />
+                    <span class="input-group-addon">a</span>
+                    <input type="text" class="input-sm form-control" name="end" />
+                  </div>
+                </div>
+
+                <p></p>
+                <label><b>Filter by GFH:</b></label>
+                <div class="gfh-filter-container">
+                  <div class="gfh-select-all">
+                    <label class="gfh-checkbox">
+                      <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                    </label>
+                  </div>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+                </div>
+
+                <p></p>
+              </fieldset>
+              <button type="submit" class="btn btn-primary filter-button" onclick="pacienteNuevo()">Count</button>
+            </form>
+          </div>
+
+          <div class="tab-pane fade" id="countPacienteNuevoByDate" role="tabpanel" aria-labelledby="home-tab">
+            <form name="countPacienteNuevoByDate" method="POST" action="/dispensacion/countPacienteNuevoByDate">
+              <fieldset>
+                <div class="form-group">
+                  <div class="input-daterange input-group" id="datepicker">
+                    <label for="name">Enter the date range (AAAA-MM-DD):</label>
+                    <input type="text" class="input-sm form-control" name="start" required />
+                    <span class="input-group-addon">a</span>
+                    <input type="text" class="input-sm form-control" name="end" required />
+                  </div>
+                </div>
+
+                <p></p>
+                <label><b>Filter by GFH:</b></label>
+                <div class="gfh-filter-container">
+                  <div class="gfh-select-all">
+                    <label class="gfh-checkbox">
+                      <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                    </label>
+                  </div>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                  <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+                </div>
+
+                <p></p>
+              </fieldset>
+              <button type="submit" class="btn btn-primary filter-button"
+                onclick="countPacienteNuevoByDate()">Count</button>
+            </form>
+          </div>
+
+
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-9 col-lg-8 col-md-9 col-sm-12">
+      <div class="row content-info">
+        <div class="page-header">
+          <h1 id="tables">Statistics</h1>
+        </div>
+
+
+        <% if (typeof start !=='undefined' && typeof end !=='undefined' ) { %>
+          <div class="date-range-info col-12">
+            <strong>Analysis period:</strong>
+            <%= new Date(start).toLocaleDateString('es-ES') %> -
+              <%= new Date(end).toLocaleDateString('es-ES') %>
+          </div>
+          <% } %>
+
+            <!-- Main statistics cards -->
+            <div class="col-md-4">
+              <div class="stat-box">
+                <h3>
+                  <%= cuenta %>
+                </h3>
+                <p>Total Patients</p>
+              </div>
+            </div>
+
+            <% if (typeof gfh_stats !=='undefined' && Object.keys(gfh_stats).length> 0) { %>
+              <div class="col-md-4">
+                <div class="stat-box" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                  <h3>
+                    <%= Object.keys(gfh_stats).length %>
+                  </h3>
+                  <p>Services (GFH)</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="stat-box" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                  <h3>
+                    <%= Math.round(cuenta / Object.keys(gfh_stats).length) %>
+                  </h3>
+                  <p>Average per Service</p>
+                </div>
+              </div>
+              <% } %>
+
+
+                <!-- Detailed table by GFH -->
+                <div class="col-12">
+                  <div class="stats-card">
+                    <h4>Detail by Service (GFH)</h4>
+
+
+
+                    <div class="gfh-table">
+                      <table class="table table-hover table-striped">
+                        <thead class="bg-secondary">
+                          <tr>
+                            <th scope="col">GFH</th>
+                            <th scope="col">Number of Patients</th>
+                            <th scope="col">Percentage</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% if (typeof gfh_stats !=='undefined' && Object.keys(gfh_stats).length> 0) { %>
+                            <% const sortedGFH=Object.entries(gfh_stats).sort((a, b)=> b[1] - a[1]);
+                              sortedGFH.forEach(function([gfh, count]) {
+                              const percentage = ((count / cuenta) * 100).toFixed(2);
+                              %>
+                              <tr>
+                                <td><strong>
+                                    <%= gfh %>
+                                  </strong></td>
+                                <td>
+                                  <%= count %>
+                                </td>
+                                <td>
+                                  <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="<%= percentage %>"
+                                      aria-valuemin="0" aria-valuemax="100">
+                                      <%= percentage %>%
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <% }); %>
+                                <% } else { %>
+                                  <tr>
+                                    <td colspan="3" class="text-center">No GFH data available</td>
+                                  </tr>
+                                  <% } %>
+                        </tbody>
+                        <tfoot class="bg-light">
+                          <tr>
+                            <th>TOTAL</th>
+                            <th>
+                              <%= cuenta %>
+                            </th>
+                            <th>100%</th>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Complete patient list -->
+                <div class="col-12">
+                  <div class="stats-card">
+                    <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#patientList">
+                      <i class="fas fa-list"></i> View complete patient list
+                    </button>
+
+                    <div class="collapse" id="patientList">
+                      <div class="mt-3" style="max-height: 500px; overflow-y: auto;">
+                        <table class="table table-sm table-hover">
+                          <thead class="thead-light">
+                            <tr>
+                              <th>Patient ID</th>
+                              <th>Date</th>
+                              <th>GFH</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% if (datos && datos.length> 0) { %>
+                              <% datos.forEach(function(dispensacion) { %>
+                                <tr>
+                                  <td>
+                                    <%= dispensacion.paciente_id || '' %>
+                                  </td>
+                                  <td>
+                                    <%= dispensacion.fecha_inicio ? new
+                                      Date(dispensacion.fecha_inicio).toLocaleDateString('es-ES') : 'No date' %>
+                                  </td>
+                                  <td>
+                                    <span class="badge badge-secondary">
+                                      <%= dispensacion.gfh_id || 'N/A' %>
+                                    </span>
+                                  </td>
+                                </tr>
+                                <% }); %>
+                                  <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script>
+
+    function generateColors(count) {
+      const colors = [];
+      for (let i = 0; i < count; i++) {
+        const hue = (i * 360 / count) % 360;
+        colors.push(`hsl(${hue}, 70%, 60%)`);
+      }
+      return colors;
+    }
+
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof gfh_stats !== 'undefined' && Object.keys(gfh_stats).length > 0) {
+
+        const gfh_stats = JSON.stringify(gfh_stats);
+
+
+        const gfhEntries = Object.entries(gfh_stats);
+
+
+        const top15 = gfhEntries.sort((a, b) => b[1] - a[1]).slice(0, 15);
+        const barLabels = top15.map(e => e[0]);
+        const barValues = top15.map(e => e[1]);
+
+        const ctxBar = document.getElementById('gfhBarChart');
+        if (ctxBar) {
+          new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+              labels: barLabels,
+              datasets: [{
+                label: 'Nº Pacientes',
+                data: barValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              indexAxis: 'y',
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: { display: true, position: 'top' }
+              },
+              scales: {
+                x: { beginAtZero: true }
+              }
+            }
+          });
+        }
+
+
+        const top10 = gfhEntries.sort((a, b) => b[1] - a[1]).slice(0, 10);
+        const others = gfhEntries.slice(10);
+
+        const pieLabels = top10.map(e => e[0]);
+
+        const othersSum = others.reduce((acc, e) => acc + e[1], 0);
+        if (othersSum > 0) {
+          pieLabels.push('Otros');
+          pieValues.push(othersSum);
+        }
+
+        const ctxPie = document.getElementById('gfhPieChart');
+        if (ctxPie) {
+          new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+              labels: pieLabels,
+              datasets: [{
+                data: pieValues,
+                backgroundColor: generateColors(pieLabels.length)
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: true,
+              plugins: {
+                legend: {
+                  position: 'right',
+                  labels: {
+                    boxWidth: 15,
+                    padding: 10
+                  }
+                }
+              }
+            }
+          });
+        }
+      } else {
+        console.log('No hay datos de GFH para mostrar gráficos');
+      }
+
+      setTimeout(function () {
+        document.querySelectorAll('.progress-bar').forEach(function (bar) {
+          const width = bar.getAttribute('aria-valuenow');
+          bar.style.width = width + '%';
+        });
+      }, 100);
+    });
+  </script>
+</body>
+
+</html>

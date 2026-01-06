@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+
+  <script src="https://unpkg.com/@popperjs/core@^2.0.0"></script>
+  <script src="/javascripts/jquery-3.2.1.min.js"></script>
+  <script src="/javascripts/bootstrap.js"></script>
+  <script src="/javascripts/bootstrap-datepicker.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+  <link rel='stylesheet' href='/stylesheets/bootstrap.css' />
+  <link rel='stylesheet' href='/stylesheets/bootstrap-datepicker.css' />
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-primary">
+        <div id="brand" class="col-xl-2 col-lg-3 col-md-3">
+          <a class="navbar-brand" href="/home"><b>PHARMACY</b></a>
+          <button style="float: right;" class="navbar-toggler collapsed" type="button" data-toggle="collapse"
+            data-target="#navbarColor01" aria-controls="#navbarColor01" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+        <div id="items" class="col-xl-10 col-lg-9 col-md-9">
+          <div class="navbar-collapse collapse" id="navbarColor01" style="">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="/consumos_acumulados"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-pills"></i> <b>ACCUMULATED CONSUMPTION</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/dispensacion"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i> <b>DISPENSATION PROGRAMS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/actuaciones"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-user-injured"></i> <b>ACTIONS</b></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="/estadisticas"><i style="margin-right: 15.5px; margin-left: 5px;" class="fas fa-chart-bar"></i> <b>STATISTICS</b></a>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner">
+        <div class="spinner-border text-primary" role="status"></div>
+
+      </div>
+    </div>
+
+    <div class="row content">
+      <div class="col-xl-2 col-lg-3 col-md-3 col-12 patient-filter">
+        <div>
+          <h2><b>FILTERS</b></h2>
+        </div>
+        <hr>
+
+        <div class="filter-section">
+          <form id="formFiltros">
+            <div class="form-group">
+              <label for="fecha_inicio"><b>Start Date:</b></label>
+              <input type="text" class="form-control" id="fecha_inicio" name="fecha_inicio" required>
+            </div>
+
+            <div class="form-group">
+              <label for="fecha_fin"><b>End Date:</b></label>
+              <input type="text" class="form-control" id="fecha_fin" name="fecha_fin" required>
+            </div>
+
+
+            <div class="form-group">
+              <label><b>Charts to display:</b></label>
+              <div class="graph-selector">
+                <div class="select-all-option">
+                  <label>
+                    <input type="checkbox" id="selectAllGraphs" onclick="toggleAllGraphs()" checked> Select all
+                  </label>
+                </div>
+                <label><input type="checkbox" id="check_kpis" checked> General KPIs</label>
+                <label><input type="checkbox" id="check_evolucion" checked> Patient Evolution</label>
+                <label><input type="checkbox" id="check_medicamentos" checked> Top Medications</label>
+                <label><input type="checkbox" id="check_actuaciones" checked> Action Distribution</label>
+                <label><input type="checkbox" id="check_comparativa" checked> Patient Comparison</label>
+                <label><input type="checkbox" id="check_gfh" checked> Dispensations by GFH</label>
+                <label><input type="checkbox" id="check_principios" checked> Active Principles</label>
+                <label><input type="checkbox" id="check_unidades" checked> Top Medications (Units)</label>
+                <label><input type="checkbox" id="check_polimedicacion" checked> Polymedication Distribution</label>
+                <label><input type="checkbox" id="check_adherencia" checked> Adherence Analysis</label>
+                <label><input type="checkbox" id="check_tendencias_act" checked> Action Trends</label>
+
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="gfh_ids"><b>GFH (optional):</b></label>
+              <div class="gfh-filter-container">
+                <div class="gfh-select-all">
+                  <label class="gfh-checkbox">
+                    <input type="checkbox" id="selectAll1" onclick="toggleAllGFH('formMedicamento')"> Select all
+                  </label>
+                </div>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="VASDP"> VASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URODP"> URODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="URGDP"> URGDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UDODP"> UDODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPDP"> UCPDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="UCPAD"> UCPAD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="TRADP"> TRADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="SALDP"> SALDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REUDP"> REUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="REHDP"> REHDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PSIDP"> PSIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PRIDP"> PRIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEX"> PEX</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="PEDDP"> PEDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORLDP"> ORLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ORADP"> ORADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCDP"> ONCDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ONCC"> ONCC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="OFTDP"> OFTDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NRLDP"> NRLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NMLDP"> NMLDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRDP"> NFRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NFRC"> NFRC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="NEFDP"> NEFDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MPRDP"> MPRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MINDP"> MINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="MAXDP"> MAXDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="INMDP"> INMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HHEST"> HHEST</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HFUEN"> HFUEN</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMDP"> HEMDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="HEMD"> HEMD</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GINDP"> GINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GERDP"> GERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GAUDP"> GAUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GATDP"> GATDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASH"> GASH</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASDP"> GASDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="GASC"> GASC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQI"> FIQI</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="FIQDP"> FIQDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ENDDP"> ENDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINDP"> EINDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="EINC"> EINC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DNUDP"> DNUDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIRDP"> DIRDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DILA"> DILA</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DIALC"> DIALC</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="DERDP"> DERDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CTODP"> CTODP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CGDDP"> CGDDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCIDP"> CCIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CCADP"> CCADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAJE"> CAJE</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAIDP"> CAIDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CAADP"> CAADP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA40"> CA40</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA39"> CA39</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA38"> CA38</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA36"> CA36</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA26"> CA26</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA22"> CA22</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA19"> CA19</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA18"> CA18</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA15"> CA15</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA14"> CA14</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA13"> CA13</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA12"> CA12</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA11"> CA11</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA10"> CA10</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA09"> CA09</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA08"> CA08</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA07"> CA07</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA06"> CA06</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA05"> CA05</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA04"> CA04</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA03"> CA03</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA02"> CA02</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="CA01"> CA01</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ALEDP"> ALEDP</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ADOM"> ADOM</label>
+                <label class="gfh-checkbox"><input type="checkbox" name="gfh_ids" value="ACVDP"> ACVDP</label>
+              </div>
+
+
+              <p></p>
+            </div>
+            <button type="button" class="btn btn-primary btn-actualizar" onclick="cargarTodasLasEstadisticas()">
+              <i class="fas fa-sync-alt"></i> Update
+            </button>
+          </form>
+        </div>
+
+        <div class="alert alert-info mt-3" role="alert" style="font-size: 0.85rem;">
+          <i class="fas fa-info-circle"></i> Select the dates and click <b>Update</b> to generate the charts.
+        </div>
+      </div>
+
+      <div class="col-xl-10 col-lg-9 col-md-9 col-12">
+        <div class="row content-info">
+          <div class="page-header">
+            <h1 id="tables"><i class="fas fa-chart-bar"></i> ENHANCED STATISTICS PANEL</h1>
+          </div>
+
+          <div class="col-xl-10 col-lg-9 col-md-9 col-12">
+            <div class="row content-info">
+
+
+              <!-- KPIs -->
+              <div class="col-12" id="section_kpis">
+                <div class="row">
+                  <div class="col-md-3 col-sm-6">
+                    <div class="kpi-card bg-primary">
+                      <i class="fas fa-pills fa-2x"></i>
+                      <h3 id="kpi-dispensaciones">-</h3>
+                      <p>Total Dispensations</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6">
+                    <div class="kpi-card bg-success">
+                      <i class="fas fa-users fa-2x"></i>
+                      <h3 id="kpi-pacientes">-</h3>
+                      <p>Unique Patients</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6">
+                    <div class="kpi-card bg-warning">
+                      <i class="fas fa-user-plus fa-2x"></i>
+                      <h3 id="kpi-nuevos">-</h3>
+                      <p>New Patients</p>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-6">
+                    <div class="kpi-card bg-info">
+                      <i class="fas fa-capsules fa-2x"></i>
+                      <h3 id="kpi-medicamentos">-</h3>
+                      <p>Unique Medications</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Original charts -->
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-lg-6" id="section_evolucion">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-chart-line text-primary"></i> Patient Evolution
+                      </h5>
+                      <canvas id="chartPacientesPeriodo"></canvas>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" id="section_medicamentos">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-chart-bar text-success"></i> Top 10 Medications (by dispensations)
+                      </h5>
+                      <canvas id="chartTopMedicamentos"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6" id="section_actuaciones">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-chart-pie text-warning"></i> Actuation Distribution
+                      </h5>
+                      <canvas id="chartActuaciones"></canvas>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" id="section_comparativa">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-users text-info"></i> New vs Recurring Patients
+                      </h5>
+                      <canvas id="chartComparativaPacientes"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6" id="section_gfh">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-hospital text-danger"></i> Dispensations by GFH
+                      </h5>
+                      <canvas id="chartGFH"></canvas>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" id="section_principios">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-flask" style="color: #6f42c1;"></i> Top Active Principles
+                      </h5>
+                      <canvas id="chartPrincipiosActivos"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- NEW CHARTS -->
+                <div class="row">
+                  <div class="col-lg-6" id="section_unidades">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-box" style="color: #e83e8c;"></i> Top 10 Medications (by units)
+                      </h5>
+                      <canvas id="chartTopUnidades"></canvas>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" id="section_polimedicacion">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-layer-group" style="color: #fd7e14;"></i> Polymedication Distribution
+                      </h5>
+                      <canvas id="chartPolimedicacion"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-6" id="section_adherencia">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-heartbeat" style="color: #20c997;"></i> Adherence Analysis (Top 15)
+                      </h5>
+                      <canvas id="chartAdherencia"></canvas>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6" id="section_tendencias_act">
+                    <div class="chart-container">
+                      <h5 class="chart-title">
+                        <i class="fas fa-chart-area" style="color: #6610f2;"></i> Action Trends
+                      </h5>
+                      <canvas id="chartTendenciasAct"></canvas>
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        let charts = {};
+
+        const colors = {
+          primary: 'rgba(0, 123, 255, 0.8)',
+          success: 'rgba(40, 167, 69, 0.8)',
+          warning: 'rgba(255, 193, 7, 0.8)',
+          danger: 'rgba(220, 53, 69, 0.8)',
+          info: 'rgba(23, 162, 184, 0.8)',
+          purple: 'rgba(111, 66, 193, 0.8)',
+          pink: 'rgba(232, 62, 140, 0.8)',
+          orange: 'rgba(253, 126, 20, 0.8)',
+          teal: 'rgba(32, 201, 151, 0.8)',
+          indigo: 'rgba(102, 16, 242, 0.8)',
+          gradient: [
+            'rgba(0, 123, 255, 0.8)',
+            'rgba(40, 167, 69, 0.8)',
+            'rgba(255, 193, 7, 0.8)',
+            'rgba(220, 53, 69, 0.8)',
+            'rgba(23, 162, 184, 0.8)',
+            'rgba(111, 66, 193, 0.8)',
+            'rgba(108, 117, 125, 0.8)',
+            'rgba(255, 87, 34, 0.8)',
+            'rgba(76, 175, 80, 0.8)',
+            'rgba(156, 39, 176, 0.8)'
+          ]
+        };
+
+        function destroyChart(chartId) {
+          if (charts[chartId]) {
+            charts[chartId].destroy();
+          }
+        }
+
+        function toggleLoading(show) {
+          const overlay = document.getElementById('loadingOverlay');
+          if (show) {
+            overlay.classList.add('active');
+          } else {
+            overlay.classList.remove('active');
+          }
+        }
+
+        function getFormData() {
+          const fechaInicio = $('#fecha_inicio').val();
+          const fechaFin = $('#fecha_fin').val();
+          const gfhIds = [];
+          $('input[name="gfh_ids"]:checked').each(function () {
+            gfhIds.push($(this).val());
+          });
+          return {
+            fecha_inicio: fechaInicio,
+            fecha_fin: fechaFin,
+            gfh_ids: gfhIds
+          };
+        }
+
+        function toggleAllGFH() {
+          const isChecked = $('#selectAllGFH').is(':checked');
+          $('input[name="gfh_ids"]').prop('checked', isChecked);
+        }
+
+        function toggleAllGraphs() {
+          const isChecked = $('#selectAllGraphs').is(':checked');
+          $('.graph-selector input[type="checkbox"]:not(#selectAllGraphs)').prop('checked', isChecked);
+        }
+
+        function mostrarSecciones() {
+          $('#section_kpis, #section_evolucion, #section_medicamentos, #section_actuaciones, #section_comparativa, #section_gfh, #section_principios, #section_unidades, #section_polimedicacion, #section_adherencia, #section_tendencias_act').hide();
+
+          if ($('#check_kpis').is(':checked')) $('#section_kpis').show();
+          if ($('#check_evolucion').is(':checked')) $('#section_evolucion').show();
+          if ($('#check_medicamentos').is(':checked')) $('#section_medicamentos').show();
+          if ($('#check_actuaciones').is(':checked')) $('#section_actuaciones').show();
+          if ($('#check_comparativa').is(':checked')) $('#section_comparativa').show();
+          if ($('#check_gfh').is(':checked')) $('#section_gfh').show();
+          if ($('#check_principios').is(':checked')) $('#section_principios').show();
+          if ($('#check_unidades').is(':checked')) $('#section_unidades').show();
+          if ($('#check_polimedicacion').is(':checked')) $('#section_polimedicacion').show();
+          if ($('#check_adherencia').is(':checked')) $('#section_adherencia').show();
+          if ($('#check_tendencias_act').is(':checked')) $('#section_tendencias_act').show();
+
+        }
+
+        // Funciones de carga de datos (originales)
+        async function cargarKPIs() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/resumen-general',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const kpis = response.data;
+              $('#kpi-dispensaciones').text(kpis.total_dispensaciones.toLocaleString());
+              $('#kpi-pacientes').text(kpis.pacientes_unicos.toLocaleString());
+              $('#kpi-nuevos').text(kpis.pacientes_nuevos.toLocaleString());
+              $('#kpi-medicamentos').text(kpis.medicamentos_unicos.toLocaleString());
+            }
+          } catch (error) {
+            console.error('Error cargando KPIs:', error);
+          }
+        }
+
+        async function cargarPacientesPeriodo() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/pacientes-periodo',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartPacientesPeriodo');
+              const ctx = document.getElementById('chartPacientesPeriodo').getContext('2d');
+              charts.chartPacientesPeriodo = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: chartData.map(d => d.periodo),
+                  datasets: [{
+                    label: 'Pacientes Únicos',
+                    data: chartData.map(d => d.total_pacientes),
+                    borderColor: colors.primary,
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { display: true, position: 'top' } },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarTopMedicamentos() {
+          const data = getFormData();
+          data.limite = 10;
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/top-medicamentos',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartTopMedicamentos');
+              const ctx = document.getElementById('chartTopMedicamentos').getContext('2d');
+              charts.chartTopMedicamentos = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => d.medicamento.substring(0, 30) + '...'),
+                  datasets: [{
+                    label: 'Dispensaciones',
+                    data: chartData.map(d => d.dispensaciones),
+                    backgroundColor: colors.gradient
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { display: false } },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarDistribucionActuaciones() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/distribucion-actuaciones',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartActuaciones');
+              const ctx = document.getElementById('chartActuaciones').getContext('2d');
+              charts.chartActuaciones = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                  labels: chartData.map(d => d.tipo),
+                  datasets: [{
+                    data: chartData.map(d => d.cantidad),
+                    backgroundColor: colors.gradient
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { position: 'right' } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarComparativaPacientes() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/comparativa-pacientes',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartComparativaPacientes');
+              const ctx = document.getElementById('chartComparativaPacientes').getContext('2d');
+              charts.chartComparativaPacientes = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => d.periodo),
+                  datasets: [
+                    {
+                      label: 'Pacientes Nuevos',
+                      data: chartData.map(d => d.pacientes_nuevos),
+                      backgroundColor: colors.success
+                    },
+                    {
+                      label: 'Pacientes Recurrentes',
+                      data: chartData.map(d => d.pacientes_recurrentes),
+                      backgroundColor: colors.info
+                    }
+                  ]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { position: 'top' } },
+                  scales: {
+                    x: { stacked: true },
+                    y: { stacked: true, beginAtZero: true }
+                  }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarDispensacionesGFH() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/dispensaciones-gfh',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartGFH');
+              const ctx = document.getElementById('chartGFH').getContext('2d');
+              charts.chartGFH = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => `GFH ${d.gfh || 'Sin asignar'}`),
+                  datasets: [{
+                    label: 'Dispensaciones',
+                    data: chartData.map(d => d.dispensaciones),
+                    backgroundColor: colors.danger,
+                    axis: 'y'
+                  }]
+                },
+                options: {
+                  indexAxis: 'y',
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { display: false } },
+                  scales: { x: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarPrincipiosActivos() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/principios-activos',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data.slice(0, 10);
+              destroyChart('chartPrincipiosActivos');
+              const ctx = document.getElementById('chartPrincipiosActivos').getContext('2d');
+              charts.chartPrincipiosActivos = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => (d.principio_activo || 'Sin especificar').substring(0, 25) + '...'),
+                  datasets: [{
+                    label: 'Unidades Totales',
+                    data: chartData.map(d => d.unidades_totales),
+                    backgroundColor: colors.purple
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: { legend: { display: false } },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        // NUEVAS FUNCIONES DE CARGA
+        async function cargarTopUnidades() {
+          const data = getFormData();
+          data.limite = 10;
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/top-medicamentos-unidades',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartTopUnidades');
+              const ctx = document.getElementById('chartTopUnidades').getContext('2d');
+              charts.chartTopUnidades = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => d.medicamento.substring(0, 30) + '...'),
+                  datasets: [{
+                    label: 'Unidades Totales',
+                    data: chartData.map(d => d.unidades_totales),
+                    backgroundColor: colors.pink
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        afterLabel: function (context) {
+                          const item = chartData[context.dataIndex];
+                          return `Pacientes: ${item.pacientes_unicos}\nPromedio/pac: ${item.promedio_por_paciente.toFixed(2)}`;
+                        }
+                      }
+                    }
+                  },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarPolimedicacion() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/distribucion-polimedicacion',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+              destroyChart('chartPolimedicacion');
+              const ctx = document.getElementById('chartPolimedicacion').getContext('2d');
+              charts.chartPolimedicacion = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                  labels: chartData.map(d => d.rango),
+                  datasets: [{
+                    data: chartData.map(d => d.pacientes),
+                    backgroundColor: colors.gradient
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: { position: 'right' },
+                    title: {
+                      display: true,
+                      text: 'Distribución de pacientes por número de medicamentos'
+                    }
+                  }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarAdherencia() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/analisis-adherencia',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data.slice(0, 15);
+              destroyChart('chartAdherencia');
+              const ctx = document.getElementById('chartAdherencia').getContext('2d');
+              charts.chartAdherencia = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: chartData.map(d => d.paciente_id.substring(0, 15) + '...'),
+                  datasets: [{
+                    label: 'Promedio Dispensaciones',
+                    data: chartData.map(d => d.promedio_dispensaciones),
+                    backgroundColor: colors.teal
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                      callbacks: {
+                        afterLabel: function (context) {
+                          const item = chartData[context.dataIndex];
+                          return `Medicamentos: ${item.num_medicamentos}\nTotal dispensaciones: ${item.total_dispensaciones}`;
+                        }
+                      }
+                    }
+                  },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        async function cargarTendenciasActuaciones() {
+          const data = getFormData();
+          try {
+            const response = await $.ajax({
+              url: '/estadisticas/api/tendencias-actuaciones',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(data)
+            });
+            if (response.success) {
+              const chartData = response.data;
+
+              // Agrupar datos por tipo de actuación
+              const tiposActuacion = [...new Set(chartData.map(d => d.tipo_actuacion))];
+              const periodos = [...new Set(chartData.map(d => d.periodo))].sort();
+
+              const datasets = tiposActuacion.slice(0, 5).map((tipo, index) => {
+                return {
+                  label: tipo,
+                  data: periodos.map(periodo => {
+                    const item = chartData.find(d => d.periodo === periodo && d.tipo_actuacion === tipo);
+                    return item ? item.cantidad : 0;
+                  }),
+                  borderColor: colors.gradient[index],
+                  backgroundColor: colors.gradient[index].replace('0.8', '0.2'),
+                  tension: 0.4,
+                  fill: false
+                };
+              });
+
+              destroyChart('chartTendenciasAct');
+              const ctx = document.getElementById('chartTendenciasAct').getContext('2d');
+              charts.chartTendenciasAct = new Chart(ctx, {
+                type: 'line',
+                data: {
+                  labels: periodos,
+                  datasets: datasets
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: true,
+                  plugins: {
+                    legend: { position: 'top' },
+                    title: {
+                      display: true,
+                      text: 'Trends of the top 5 actions'
+                    }
+                  },
+                  scales: { y: { beginAtZero: true } }
+                }
+              });
+            }
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+
+
+        async function cargarTodasLasEstadisticas() {
+          const fechaInicio = $('#fecha_inicio').val();
+          const fechaFin = $('#fecha_fin').val();
+
+          if (!fechaInicio || !fechaFin) {
+            alert('Please select the start and end dates');
+            return;
+          }
+
+          const algunoSeleccionado = $('.graph-selector input[type="checkbox"]:not(#selectAllGraphs)').is(':checked');
+          if (!algunoSeleccionado) {
+            alert('Por favor, selecciona al menos un gráfico para visualizar');
+            return;
+          }
+
+          mostrarSecciones();
+          toggleLoading(true);
+
+          try {
+            const promesas = [];
+
+            if ($('#check_kpis').is(':checked')) promesas.push(cargarKPIs());
+            if ($('#check_evolucion').is(':checked')) promesas.push(cargarPacientesPeriodo());
+            if ($('#check_medicamentos').is(':checked')) promesas.push(cargarTopMedicamentos());
+            if ($('#check_actuaciones').is(':checked')) promesas.push(cargarDistribucionActuaciones());
+            if ($('#check_comparativa').is(':checked')) promesas.push(cargarComparativaPacientes());
+            if ($('#check_gfh').is(':checked')) promesas.push(cargarDispensacionesGFH());
+            if ($('#check_principios').is(':checked')) promesas.push(cargarPrincipiosActivos());
+
+
+            // Nuevas gráficas
+            if ($('#check_unidades').is(':checked')) promesas.push(cargarTopUnidades());
+            if ($('#check_polimedicacion').is(':checked')) promesas.push(cargarPolimedicacion());
+            if ($('#check_adherencia').is(':checked')) promesas.push(cargarAdherencia());
+            if ($('#check_tendencias_act').is(':checked')) promesas.push(cargarTendenciasActuaciones());
+
+            await Promise.all(promesas);
+          } catch (error) {
+            console.error('Error cargando estadísticas:', error);
+            alert('Error al cargar las estadísticas');
+          } finally {
+            toggleLoading(false);
+          }
+        }
+
+        $(document).ready(function () {
+          $('#fecha_inicio, #fecha_fin').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+          });
+
+          // Request available date range from server and set picker bounds/defaults
+          $.ajax({
+            url: '/estadisticas/api/debug/date-range',
+            method: 'GET',
+            success: function (resp) {
+              try {
+                const global = resp.global;
+                if (global && global.min && global.max) {
+                  const minDate = new Date(global.min);
+                  const maxDate = new Date(global.max);
+
+                  $('#fecha_inicio, #fecha_fin').datepicker('setStartDate', minDate);
+                  $('#fecha_inicio, #fecha_fin').datepicker('setEndDate', maxDate);
+
+                  // Set defaults to the full range (or a sensible subset)
+                  $('#fecha_inicio').datepicker('setDate', minDate);
+                  $('#fecha_fin').datepicker('setDate', maxDate);
+                } else {
+                  // Fallback to previous sensible defaults
+                  $('#fecha_fin').datepicker('setDate', new Date('2021-07-30'));
+                  $('#fecha_inicio').datepicker('setDate', new Date('2020-06-01'));
+                }
+              } catch (err) {
+                console.error('Error parsing date-range:', err);
+              }
+
+              // Cargar automáticamente al inicio
+              cargarTodasLasEstadisticas();
+            },
+            error: function (err) {
+              console.error('Error getting date range:', err);
+              $('#fecha_fin').datepicker('setDate', new Date('2021-07-30'));
+              $('#fecha_inicio').datepicker('setDate', new Date('2020-06-01'));
+
+              // Cargar automáticamente al inicio
+              cargarTodasLasEstadisticas();
+            }
+          });
+        });
+      </script>
+</body>
+
+</html>

@@ -18,19 +18,28 @@
     "upload": "autocorector -u",
     "test:old": "nodemon --exec 'mocha -R min'"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
-    "autocorector": "^3.1.4",
-    "body-parser": "~1.12.4",
+    "autocorector": "^3.0.3",
+    "body-parser": "^1.20.2",
+    "dotenv": "^17.2.3",
     "ejs": "^3.0.1",
-    "express": "~4.13.1",
+    "express": "^4.19.1",
+    "json2csv": "^6.0.0-alpha.2",
     "method-override": "^2.3.1",
-    "mocha": "^7.0.1",
-    "mongoose": "^5.8.11",
+    "mocha": "^10.3.0",
+    "mongoose": "^9.0.0",
     "mongoose-data-seed": "^2.1.6",
     "nodemon": "^2.0.2",
+    "papaparse": "^5.5.3",
     "popper.js": "^1.16.1"
   },
   "mdSeed": {
     "seedersFolder": "./seeders"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }
