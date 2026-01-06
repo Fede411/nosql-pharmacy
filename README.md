@@ -13,7 +13,7 @@ A comprehensive web application for managing pharmacy dispensing programs, accum
 
 ## 🚀 Live Demo
 
-Visit the live application: [Pharmacy Management System](https://nosql-pharmacy.onrender.com)
+Visit the live application: [Pharmacy Management System](https://pharmacy-app-s2mw.onrender.com)
 
 ## 🛠️ Tech Stack
 
