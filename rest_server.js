@@ -1,15 +1,18 @@
+require('dotenv').config(); // ← DEBE SER LA PRIMERA LÍNEA
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const path = require('path');
 const FarmaController = require('./controllers/farma');
+const EstadisticasController = require('./controllers/estadisticas');
+const { Parser } = require('json2csv'); // ← Añadir si lo usas
 
 const app = express();
-require('dotenv').config();
-const express = require('express');
+
 const mongoose = require('mongoose');
 const pa_medicamento = require('./models/pa_medicamento');
-const EstadisticasController = require('./controllers/estadisticas');
+const dispensaciones = require('./models/dispensacion');
 
 // Usar variable de entorno o fallback a local
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/prueba_farma';
@@ -20,7 +23,7 @@ mongoose.connect(MONGODB_URI)
     })
     .catch((error) => {
         console.error('❌ Error connecting to MongoDB:', error);
-        process.exit(1); // Detener la app si no hay conexión
+        process.exit(1);
     });
 
 app.use(methodOverride('_method'));
@@ -693,7 +696,6 @@ app.get('/consumos_acumulados/export', async (req, res, next) => {
 });
 
 // ====== CSV EXPORT ROUTES ======
-const { Parser } = require('json2csv');
 
 app.get('/dispensacion/export', async (req, res, next) => {
     try {
