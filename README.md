@@ -22,7 +22,7 @@ Visit the live application: [Pharmacy Management System](https://pharmacy-app-s2
 - **Template Engine**: EJS
 - **Styling**: Bootstrap, Custom CSS
 - **Dependencies**:
-  - mongoose: MongoDB object modeling
+  - mongoose: MongoDB object modelling
   - json2csv: CSV export functionality
   - papaparse: CSV parsing
   - body-parser: Request body parsing
