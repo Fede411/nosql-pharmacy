@@ -4,12 +4,12 @@ A comprehensive web application for managing pharmacy dispensing programs, accum
 
 ## 🌟 Features
 
-- **Dispensing Programs Management**: Track medication dispensing with detailed patient and prescription information
-- **Accumulated Consumption Tracking**: Monitor medication usage over time with comprehensive analytics
-- **Pharmaceutical Interventions**: Record and manage pharmacist actions and interventions
-- **Advanced Statistics**: Visualize data with interactive charts and insights
-- **CSV Export**: Export filtered data for external analysis
-- **Search & Filter**: Advanced filtering by medication, active ingredient, date ranges, and more
+- **Dispensing Programs Management**: Track medication dispensing with detailed patient and prescription information.
+- **Accumulated Consumption Tracking**: Monitor medication usage over time with comprehensive analytics.
+- **Pharmaceutical Interventions**: Record and manage pharmacist actions and interventions.
+- **Advanced Statistics**: Visualize data with interactive charts and insights.
+- **CSV Export**: Export filtered data for external analysis.
+- **Search & Filter**: Advanced filtering by medication, active ingredient, date ranges, and more.
 
 ## 🚀 Live Demo
 
