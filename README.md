@@ -152,18 +152,9 @@ The application is deployed on [Render](https://render.com) with:
 
 This application uses anonymized data for demonstration purposes. All patient and healthcare provider information has been de-identified.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## 📄 License
 
 This project is licensed under the GNU License.
-
-## 👨‍💻 Author
-
-**Federico**
-- GitHub: [@Fede411](https://github.com/Fede411)
 
 ## 🙏 Acknowledgments
 
